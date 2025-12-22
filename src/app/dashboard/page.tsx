@@ -12,71 +12,84 @@ export default function DashboardPage() {
   return (
     <AppLayout>
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">Bom dia ☀️</h1>
-        <p className="text-gray-600">
-          Bora manter o foco hoje.
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold tracking-tight">
+          Bom dia ☀️
+        </h1>
+        <p className="text-gray-500 mt-1">
+          Vamos cuidar do seu corpo hoje.
         </p>
       </div>
 
-      {/* Cards principais */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      {/* Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
         {/* Água */}
-        <div className="bg-blue-500 text-white rounded-2xl p-5">
-          <h2 className="font-semibold mb-2">💧 Água</h2>
-          <p className="text-sm mb-2">
-            {aguaAtual}ml de {aguaMeta}ml
-          </p>
+        <div className="rounded-3xl bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 shadow-lg">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold text-lg">💧 Água</h2>
+            <span className="text-sm opacity-80">
+              {aguaAtual}/{aguaMeta} ml
+            </span>
+          </div>
 
-          <div className="w-full bg-blue-400 rounded-full h-2">
+          <div className="w-full bg-white/30 rounded-full h-2 mb-2">
             <div
-              className="bg-white h-2 rounded-full"
+              className="bg-white h-2 rounded-full transition-all"
               style={{ width: `${progressoAgua}%` }}
             />
           </div>
 
-          <p className="text-xs mt-2">
-            {progressoAgua}% da meta
+          <p className="text-sm opacity-90">
+            {progressoAgua}% da meta diária
           </p>
         </div>
 
         {/* Calorias */}
-        <div className="bg-orange-500 text-white rounded-2xl p-5">
-          <h2 className="font-semibold mb-2">🔥 Calorias</h2>
-          <p className="text-3xl font-bold">1.340</p>
-          <p className="text-sm opacity-90">
-            kcal consumidas
+        <div className="rounded-3xl bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 shadow-lg">
+          <h2 className="font-semibold text-lg mb-3">🔥 Calorias</h2>
+          <p className="text-4xl font-bold leading-none">1.340</p>
+          <p className="text-sm opacity-90 mt-1">
+            kcal consumidas hoje
           </p>
         </div>
 
         {/* Exercícios */}
-        <div className="bg-green-500 text-white rounded-2xl p-5">
-          <h2 className="font-semibold mb-2">🏃 Exercícios</h2>
-          <p className="text-3xl font-bold">45</p>
-          <p className="text-sm opacity-90">
-            minutos hoje
+        <div className="rounded-3xl bg-gradient-to-br from-green-500 to-green-600 text-white p-6 shadow-lg">
+          <h2 className="font-semibold text-lg mb-3">🏃 Exercícios</h2>
+          <p className="text-4xl font-bold leading-none">45</p>
+          <p className="text-sm opacity-90 mt-1">
+            minutos ativos
           </p>
         </div>
       </div>
 
-      {/* Streak */}
-      <div className="bg-white rounded-2xl p-5 border">
-        <h2 className="font-semibold mb-1">🔥 Sequência</h2>
-        <p className="text-gray-600 mb-3">
-          Você está mandando bem!
+      {/* Sequência */}
+      <div className="bg-white rounded-3xl p-6 border shadow-sm">
+        <h2 className="font-semibold text-lg mb-1">
+          🔥 Sequência semanal
+        </h2>
+        <p className="text-gray-500 mb-4">
+          Você está criando um hábito forte.
         </p>
 
         <div className="flex gap-2">
-          {["S", "T", "Q", "Q", "S", "S", "D"].map((dia, index) => (
-            <div
-              key={index}
-              className={`w-10 h-10 flex items-center justify-center rounded-full text-sm font-medium
-                ${index < 4 ? "bg-orange-500 text-white" : "bg-gray-200 text-gray-500"}
-              `}
-            >
-              {dia}
-            </div>
-          ))}
+          {["S", "T", "Q", "Q", "S", "S", "D"].map((dia, index) => {
+            const ativo = index < 4;
+            return (
+              <div
+                key={index}
+                className={`w-11 h-11 flex items-center justify-center rounded-full font-medium transition
+                  ${
+                    ativo
+                      ? "bg-orange-500 text-white shadow"
+                      : "bg-gray-100 text-gray-400"
+                  }
+                `}
+              >
+                {dia}
+              </div>
+            );
+          })}
         </div>
       </div>
     </AppLayout>
