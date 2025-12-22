@@ -1,103 +1,84 @@
-"use client";
-
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Droplets, Utensils, Dumbbell, Bell, Download } from "lucide-react";
+import AppLayout from "@/components/AppLayout";
 
 export default function DashboardPage() {
+  const aguaAtual = 1200;
+  const aguaMeta = 2500;
+
+  const progressoAgua = Math.min(
+    Math.round((aguaAtual / aguaMeta) * 100),
+    100
+  );
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-500 to-yellow-400">
+    <AppLayout>
       {/* Header */}
-      <div className="bg-white shadow-sm p-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">Olá, Becca! ☀️</h1>
-            <p className="text-gray-600">Sequência atual: 5 dias</p>
-          </div>
-          <Bell className="w-6 h-6 text-gray-600" />
-        </div>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold">Bom dia ☀️</h1>
+        <p className="text-gray-600">
+          Bora manter o foco hoje.
+        </p>
       </div>
 
-      <div className="p-4 space-y-6">
-        {/* Action Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="p-6 bg-blue-500 text-white hover:bg-blue-600 transition-colors cursor-pointer">
-            <div className="flex items-center gap-4">
-              <Droplets className="w-8 h-8" />
-              <div>
-                <h3 className="text-lg font-semibold">Água</h3>
-                <p className="text-sm opacity-90">Registrar consumo</p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6 bg-orange-500 text-white hover:bg-orange-600 transition-colors cursor-pointer">
-            <div className="flex items-center gap-4">
-              <Utensils className="w-8 h-8" />
-              <div>
-                <h3 className="text-lg font-semibold">Refeição</h3>
-                <p className="text-sm opacity-90">Registrar alimentos</p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6 bg-green-500 text-white hover:bg-green-600 transition-colors cursor-pointer">
-            <div className="flex items-center gap-4">
-              <Dumbbell className="w-8 h-8" />
-              <div>
-                <h3 className="text-lg font-semibold">Exercício</h3>
-                <p className="text-sm opacity-90">Registrar atividade</p>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* Progress Section */}
-        <Card className="p-6 bg-white">
-          <h3 className="text-lg font-semibold mb-4">Progresso Diário</h3>
-          <div className="space-y-4">
-            <div>
-              <div className="flex justify-between text-sm mb-1">
-                <span>Água</span>
-                <span>1200 / 2000 ml</span>
-              </div>
-              <Progress value={60} className="h-2" />
-            </div>
-
-            <div>
-              <div className="flex justify-between text-sm mb-1">
-                <span>Calorias</span>
-                <span>850 / 1800 kcal</span>
-              </div>
-              <Progress value={47} className="h-2" />
-            </div>
-
-            <div>
-              <div className="flex justify-between text-sm mb-1">
-                <span>Exercício</span>
-                <span>30 / 60 min</span>
-              </div>
-              <Progress value={50} className="h-2" />
-            </div>
-          </div>
-        </Card>
-
-        {/* Motivational Card */}
-        <Card className="p-6 bg-yellow-100 border-yellow-200">
-          <p className="text-center text-gray-800 font-medium">
-            "Cada passo conta! Continue assim! 🌟"
+      {/* Cards principais */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        {/* Água */}
+        <div className="bg-blue-500 text-white rounded-2xl p-5">
+          <h2 className="font-semibold mb-2">💧 Água</h2>
+          <p className="text-sm mb-2">
+            {aguaAtual}ml de {aguaMeta}ml
           </p>
-        </Card>
 
-        {/* Install App Button */}
-        <Card className="p-4 bg-white">
-          <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2">
-            <Download className="w-5 h-5" />
-            Instalar App
-          </Button>
-        </Card>
+          <div className="w-full bg-blue-400 rounded-full h-2">
+            <div
+              className="bg-white h-2 rounded-full"
+              style={{ width: `${progressoAgua}%` }}
+            />
+          </div>
+
+          <p className="text-xs mt-2">
+            {progressoAgua}% da meta
+          </p>
+        </div>
+
+        {/* Calorias */}
+        <div className="bg-orange-500 text-white rounded-2xl p-5">
+          <h2 className="font-semibold mb-2">🔥 Calorias</h2>
+          <p className="text-3xl font-bold">1.340</p>
+          <p className="text-sm opacity-90">
+            kcal consumidas
+          </p>
+        </div>
+
+        {/* Exercícios */}
+        <div className="bg-green-500 text-white rounded-2xl p-5">
+          <h2 className="font-semibold mb-2">🏃 Exercícios</h2>
+          <p className="text-3xl font-bold">45</p>
+          <p className="text-sm opacity-90">
+            minutos hoje
+          </p>
+        </div>
       </div>
-    </div>
+
+      {/* Streak */}
+      <div className="bg-white rounded-2xl p-5 border">
+        <h2 className="font-semibold mb-1">🔥 Sequência</h2>
+        <p className="text-gray-600 mb-3">
+          Você está mandando bem!
+        </p>
+
+        <div className="flex gap-2">
+          {["S", "T", "Q", "Q", "S", "S", "D"].map((dia, index) => (
+            <div
+              key={index}
+              className={`w-10 h-10 flex items-center justify-center rounded-full text-sm font-medium
+                ${index < 4 ? "bg-orange-500 text-white" : "bg-gray-200 text-gray-500"}
+              `}
+            >
+              {dia}
+            </div>
+          ))}
+        </div>
+      </div>
+    </AppLayout>
   );
 }
