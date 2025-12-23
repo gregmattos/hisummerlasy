@@ -1,6 +1,14 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import AppLayout from "@/components/AppLayout";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+
   const aguaAtual = 1200;
   const aguaMeta = 2500;
 
@@ -8,6 +16,42 @@ export default function DashboardPage() {
     Math.round((aguaAtual / aguaMeta) * 100),
     100
   );
+
+  useEffect(() => {
+    async function checkOnboarding() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from("user_profile")
+        .select("onboarding_completed")
+        .eq("id", user.id)
+        .single();
+
+      if (!profile || profile.onboarding_completed !== true) {
+        router.push("/quiz");
+        return;
+      }
+
+      setLoading(false);
+    }
+
+    checkOnboarding();
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-500">Carregando...</p>
+      </div>
+    );
+  }
 
   return (
     <AppLayout>
@@ -78,7 +122,7 @@ export default function DashboardPage() {
             return (
               <div
                 key={index}
-                className={`w-11 h-11 flex items-center justify-center rounded-full font-medium transition
+                className={`w-11 h-11 flex items-center justify-center rounded-full font-medium
                   ${
                     ativo
                       ? "bg-orange-500 text-white shadow"
