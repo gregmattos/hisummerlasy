@@ -2,17 +2,21 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
 
 const steps = [
   {
+    key: "goal",
     title: "Qual é seu objetivo?",
     options: ["Emagrecer", "Manter peso", "Ganhar massa"],
   },
   {
+    key: "workout_frequency",
     title: "Com que frequência você treina?",
     options: ["Nunca", "1–2x por semana", "3–5x por semana", "Todos os dias"],
   },
   {
+    key: "diet_quality",
     title: "Como está sua alimentação?",
     options: [
       "Nada controlada",
@@ -22,6 +26,7 @@ const steps = [
     ],
   },
   {
+    key: "weight",
     title: "Quanto você pesa hoje?",
     input: true,
     placeholder: "Ex: 75 kg",
@@ -31,19 +36,45 @@ const steps = [
 export default function QuizPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<string[]>([]);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
 
-  function handleAnswer(value: string) {
-    const updated = [...answers];
-    updated[step] = value;
+  async function handleAnswer(value: string) {
+    const currentKey = steps[step].key;
+
+    const updated = {
+      ...answers,
+      [currentKey]: value,
+    };
+
     setAnswers(updated);
 
     if (step < steps.length - 1) {
       setStep(step + 1);
     } else {
-      // depois a gente salva no Supabase
-      router.push("/dashboard");
+      await saveToSupabase(updated);
     }
+  }
+
+  async function saveToSupabase(data: Record<string, string>) {
+    setLoading(true);
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      alert("Usuário não autenticado");
+      return;
+    }
+
+    await supabase.from("user_profile").upsert({
+      id: user.id,
+      ...data,
+      onboarding_completed: true,
+    });
+
+    router.push("/dashboard");
   }
 
   return (
@@ -65,19 +96,17 @@ export default function QuizPage() {
           </div>
         </div>
 
-        {/* Title */}
         <h1 className="text-2xl font-bold mb-6 text-center">
           {steps[step].title}
         </h1>
 
-        {/* Options */}
         <div className="space-y-3">
           {"options" in steps[step] &&
             steps[step].options?.map((opt) => (
               <button
                 key={opt}
                 onClick={() => handleAnswer(opt)}
-                className="w-full py-4 rounded-xl border text-left px-4 font-medium hover:bg-orange-100 transition"
+                className="w-full py-4 rounded-xl border px-4 font-medium hover:bg-orange-100 transition"
               >
                 {opt}
               </button>
@@ -99,6 +128,7 @@ export default function QuizPage() {
               />
 
               <button
+                disabled={loading}
                 onClick={() =>
                   handleAnswer(
                     (document.querySelector(
@@ -106,9 +136,9 @@ export default function QuizPage() {
                     ) as HTMLInputElement)?.value
                   )
                 }
-                className="w-full py-4 rounded-xl bg-orange-500 text-white font-semibold hover:bg-orange-600 transition"
+                className="w-full py-4 rounded-xl bg-orange-500 text-white font-semibold hover:bg-orange-600 transition disabled:opacity-50"
               >
-                Continuar
+                {loading ? "Salvando..." : "Finalizar"}
               </button>
             </>
           )}
