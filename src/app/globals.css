@@ -1,6 +1,12 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+.input {
+  @apply w-full mb-3 px-4 py-3 rounded-xl border border-gray-300
+  focus:outline-none focus:ring-2 focus:ring-orange-400;
+}
+
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
